@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Advanced Web Calculator</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f0f2f5;
+    }
+
+    header {
+      background-color: #282c34;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    nav {
+      background-color: #444;
+      padding: 10px;
+      text-align: center;
+    }
+
+    nav a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+    }
+
+    main {
+      padding: 20px;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    section {
+      background: #fff;
+      padding: 25px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .form-group {
+      margin: 15px 0;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      font-size: 1em;
+    }
+
+    .buttons button {
+      margin: 5px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      background: #007BFF;
+      color: white;
+    }
+
+    .buttons button:hover {
+      background-color: #0056b3;
+    }
+
+    .result, .history {
+      margin-top: 20px;
+      font-size: 1.1em;
+    }
+
+    footer {
+      text-align: center;
+      padding: 15px;
+      background-color: #282c34;
+      color: white;
+      margin-top: 40px;
+    }
+
+    @media (max-width: 600px) {
+      .buttons button {
+        width: 100%;
+        margin-top: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Advanced Web Calculator</h1>
+    <p>Perform basic arithmetic operations in your browser</p>
+  </header>
+
+  <nav>
+    <a href="#calculator">Calculator</a>
+    <a href="#about">About</a>
+  </nav>
+
+  <main>
+    <!-- Calculator Section -->
+    <section id="calculator">
+      <h2>Calculator</h2>
+      <div class="form-group">
+        <label for="num1">Enter First Number:</label>
+        <input type="number" id="num1">
+      </div>
+
+      <div class="form-group">
+        <label for="num2">Enter Second Number:</label>
+        <input type="number" id="num2">
+      </div>
+
+      <div class="buttons">
+        <button onclick="calc.operate('add')">Add</button>
+        <button onclick="calc.operate('subtract')">Subtract</button>
+        <button onclick="calc.operate('multiply')">Multiply</button>
+        <button onclick="calc.operate('divide')">Divide</button>
+        <button onclick="calc.clear()">Clear</button>
+      </div>
+
+      <div class="result" id="result">Result: </div>
+      <div class="history" id="history">History:</div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about">
+      <h2>About This Project</h2>
+      <p>This is a basic web calculator built using HTML, CSS, and JavaScript. It allows users to perform arithmetic operations like addition, subtraction, multiplication, and division.</p>
+      <p>It also keeps track of your calculations and displays them in a history panel. The design is mobile-friendly and responsive.</p>
+    </section>
+  </main>
+
+  <footer>
+    &copy; 2025 Web Calculator. All rights reserved.
+  </footer>
+
+  <script>
+    class Calculator {
+      constructor(resultId, historyId) {
+        this.resultElement = document.getElementById(resultId);
+        this.historyElement = document.getElementById(historyId);
+        this.history = [];
+      }
+
+      getNumbers() {
+        const num1 = parseFloat(document.getElementById('num1').value);
+        const num2 = parseFloat(document.getElementById('num2').value);
+        return { num1, num2 };
+      }
+
+      operate(operation) {
+        const { num1, num2 } = this.getNumbers();
+        if (isNaN(num1) || isNaN(num2)) {
+          this.setResult("Please enter valid numbers.");
+          return;
+        }
+
+        let result, symbol;
+        switch (operation) {
+          case 'add':
+            result = num1 + num2;
+            symbol = '+';
+            break;
+          case 'subtract':
+            result = num1 - num2;
+            symbol = '-';
+            break;
+          case 'multiply':
+            result = num1 * num2;
+            symbol = '×';
+            break;
+          case 'divide':
+            if (num2 === 0) {
+              this.setResult("Cannot divide by zero.");
+              return;
+            }
+            result = num1 / num2;
+            symbol = '÷';
+            break;
+          default:
+            this.setResult("Unknown operation.");
+            return;
+        }
+
+        const expression = `${num1} ${symbol} ${num2} = ${result}`;
+        this.setResult(`Result: ${result}`);
+        this.addToHistory(expression);
+      }
+
+      setResult(text) {
+        this.resultElement.textContent = text;
+      }
+
+      addToHistory(entry) {
+        const entryDiv = document.createElement('div');
+        entryDiv.textContent = entry;
+        this.historyElement.appendChild(entryDiv);
+      }
+
+      clear() {
+        document.getElementById('num1').value = '';
+        document.getElementById('num2').value = '';
+        this.setResult('Result:');
+      }
+    }
+
+    const calc = new Calculator('result', 'history');
+  </script>
+</body>
+</html>
